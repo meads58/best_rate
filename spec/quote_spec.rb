@@ -47,4 +47,34 @@ describe Main do
     end
   end
 
+  context 'checks the loan is an increment of 100' do
+    before(:each) do
+      @quote = Main.new
+    end
+    it 'Returns false when the loan amount is NOT an increment of 100 but within the range limit e.g. 1005.' do
+      stub_const("ARGV", ['market_file', 1005])
+      expect(@quote.check_loan_amount).to be false
+    end
+    it 'Returns true when the loan amount is an increment of 100 and within the range limit e.g. 1100' do
+      stub_const("ARGV", ['market_file', 1100])
+      expect(@quote.check_loan_amount).to be true
+    end
+  end
+
+  context 'find best loan' do
+    before(:each) do
+      @quote = Main.new
+    end
+    it 'Calls find_best_loan if the check_loan_amount loan amount returns true' do
+      stub_const("ARGV", ['market_file', 1100])
+      expect(@quote).to receive(:find_best_deal)
+      @quote.correct_args
+    end
+    it 'Exits if the check_loan_amount check returns false' do
+      stub_const("ARGV", ['market_file', 1105])
+      expect(@quote).to_not receive(:find_best_deal)
+      @quote.correct_args
+    end
+  end
+
 end
