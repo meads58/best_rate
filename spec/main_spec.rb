@@ -1,4 +1,5 @@
 require 'main'
+require 'offers'
 
 describe Main do
 
@@ -63,7 +64,7 @@ describe Main do
 
   context 'find best loan' do
     before(:each) do
-      @quote = Main.new
+      @quote = Main.new(1)
     end
     it 'Calls find_best_loan if the check_loan_amount loan amount returns true' do
       stub_const("ARGV", ['market_file', 1100])
@@ -74,6 +75,9 @@ describe Main do
       stub_const("ARGV", ['market_file', 1105])
       expect(@quote).to_not receive(:find_best_deal)
       @quote.correct_args
+    end
+    it '' do
+      puts @quote.find_best_deal
     end
   end
 

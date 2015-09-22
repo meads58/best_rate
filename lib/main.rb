@@ -1,6 +1,9 @@
+require 'offers'
+
 class Main
 
-  def initialize
+  def initialize options = {}
+    @offers = Offers.new
     correct_args
   end
 
@@ -18,12 +21,13 @@ class Main
   end
 
   def find_best_deal
-    #implement the engine
+    @test_file = "/Users/meads/Programming/Ruby/MakersAcademy/Projects/Zopa/best_rate/spec/test_offers.csv"
+    offers = @offers.convert_to_array @test_file
   end
 
 end
 
-quote = Main.new
+quote = Main.new(1)
 quote
 
 
