@@ -6,11 +6,11 @@ class Main
   attr_accessor :matcher
 
   def initialize options = {}
-    @borrower_amount = 0 
+    @borrower_amount = 0
     @lend = Lender.new
     @matcher = Matcher.new
     correct_args
-    main 
+
   end
 
   def main
@@ -22,9 +22,11 @@ class Main
     if ARGV.count != 2
       failed_validation 'plase supply a market file and loan amount'
     elsif check_loan_amount == false
-      failed_validation 'Please supply and amount to borrow between £1000 and £15,000 and in £100 increments'    
+      failed_validation 'Please supply and amount to borrow between £1000 and £15,000 and in £100 increments'
     else
       @borrower_amount = ARGV[1].to_i
+      puts ARGV[0]
+      main
     end
   end
 
@@ -34,9 +36,7 @@ class Main
   end
 
   def get_sorted_lenders_array
-   # "/home/meads/Workspace/tech_test/best_rate/spec/test_offers.csv"
-   #@test_file = ARGV[0]
-    @test_file = "/home/meads/Workspace/tech_test/best_rate/spec/test_offers.csv"
+    @test_file = ARGV[0]
     @lend.convert_csv_to_array @test_file
   end
 
@@ -53,8 +53,10 @@ class Main
   # end
 end
 
+if __FILE__ == $0
  quote = Main.new
- #uote.main
+end
+
 
 
 

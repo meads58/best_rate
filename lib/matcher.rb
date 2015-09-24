@@ -9,7 +9,6 @@ class Matcher
   end
 
   def enough_funds? sorted_lender_list, borrow_amount
-    puts borrow_amount
     (available_lender_amount(sorted_lender_list) >= borrow_amount) ? true : false
   end
 
