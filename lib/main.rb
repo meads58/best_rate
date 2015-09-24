@@ -3,9 +3,10 @@ require_relative 'matcher'
 
 class Main
 
-  attr_accessor :matcher, :lender_list, :borrower_amount
+  attr_accessor :matcher
 
   def initialize options = {}
+    @borrower_amount = 0 
     @lend = Lender.new
     @matcher = Matcher.new
     correct_args
@@ -13,8 +14,8 @@ class Main
   end
 
   def main
-    #sorted_lenders = get_sorted_lenders_array
-    #match_amount(sorted_lenders, borrower_amount)
+    sorted_lenders = get_sorted_lenders_array
+    matcher.match_amount(sorted_lenders, @borrower_amount)
   end
 
   def correct_args
@@ -23,7 +24,7 @@ class Main
     elsif check_loan_amount == false
       failed_validation 'Please supply and amount to borrow between £1000 and £15,000 and in £100 increments'    
     else
-      borrower_amount = ARGV[1]
+      @borrower_amount = ARGV[1].to_i
     end
   end
 
@@ -33,8 +34,9 @@ class Main
   end
 
   def get_sorted_lenders_array
-    #"/home/meads/Workspace/tech_test/best_rate/spec/test_offers.csv"
-    @test_file = ARGV[0]
+   # "/home/meads/Workspace/tech_test/best_rate/spec/test_offers.csv"
+   #@test_file = ARGV[0]
+    @test_file = "/home/meads/Workspace/tech_test/best_rate/spec/test_offers.csv"
     @lend.convert_csv_to_array @test_file
   end
 

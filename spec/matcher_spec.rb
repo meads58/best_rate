@@ -40,4 +40,23 @@ describe Matcher do
     end
   end
 
+  context 'calc_lent_amount' do
+    it 'returns the lenders amount when less then remaining amount to borrow' do
+      lender_amount = 100
+      remaining_to_borrow = 300
+      expect(match.calc_lent_amount(lender_amount, remaining_to_borrow)).to eq 100
+    end
+     it 'returns the borrowers amount when greater then the lenders amount' do
+      lender_amount = 400
+      remaining_to_borrow = 200
+      expect(match.calc_lent_amount(lender_amount, remaining_to_borrow)).to eq 200
+    end
+
+    it 'returns the borrowers amount when equal the lenders amount' do
+      lender_amount = 400
+      remaining_to_borrow = 400
+      expect(match.calc_lent_amount(lender_amount, remaining_to_borrow)).to eq 400
+    end
+  end
+
 end
