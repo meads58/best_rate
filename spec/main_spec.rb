@@ -2,8 +2,11 @@ require 'main'
 
 describe Main do
   let(:quote) {Main.new}
-
+  before(:each) do
+    stub_const("ARGV", ['market_file'])
+  end
   context 'checks for market file and loan amount when run.' do
+
     it 'Runs the correct_args method when initialized.' do
       expect_any_instance_of(Main).to receive(:correct_args)
       Main.new
@@ -50,9 +53,11 @@ describe Main do
     end
   end
 
-  xcontext 'find best loan' do
+  xcontext 'get_sorted_lenders_array' do
     it 'Calls find_best_loan if the check_loan_amount loan amount returns true' do
-      expect(quote.find_best_deal).to receive(:convert_csv_to_array)
+      lender = class_double("Lender")
+      expect(quote).to receive_message_chain("lend", "convert_csv_to_array")
+      quote.get_sorted_lenders_array
     end
   end
 

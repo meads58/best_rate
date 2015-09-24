@@ -23,7 +23,6 @@ describe Lender do
       @lender_list = [{lender: 'Bob', rate: 0.95, avaliable: 500}, {rate: 0.09, lender: 'Jill', avaliable: 200}]
     end
     it 'will sort the lenders list in ascending order by rate' do
-      #expect(lender.sort_rates).to
       expect(lender.sort_rates @lender_list).to  be == [{rate: 0.09, lender: 'Jill', avaliable: 200},{lender: 'Bob', rate: 0.95, avaliable: 500}]
     end
   end

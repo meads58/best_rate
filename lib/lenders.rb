@@ -11,6 +11,6 @@ class Lender
   end
 
   def sort_rates lender_list_array
-    sorted = lender_list_array.sort_by { |k| k[:rate] }
+    sorted_list = lender_list_array.sort_by { |hash| hash[:rate] }
   end
 end
