@@ -15,7 +15,7 @@ class Main
 
   def main
     sorted_lenders = get_sorted_lenders_array
-    matcher.match_amount(sorted_lenders, @borrower_amount)
+    puts matcher.run_matcher(sorted_lenders, @borrower_amount)
   end
 
   def correct_args
@@ -25,7 +25,6 @@ class Main
       failed_validation 'Please supply and amount to borrow between £1000 and £15,000 and in £100 increments'
     else
       @borrower_amount = ARGV[1].to_i
-      puts ARGV[0]
       main
     end
   end

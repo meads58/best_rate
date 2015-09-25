@@ -1,46 +1,63 @@
 class Matcher
 
-  def match_amount sorted_lender_list, borrow_amount
-    if enough_funds?(sorted_lender_list, borrow_amount)
-      calculate_rate(sorted_lender_list , borrow_amount)
+  attr_accessor :sorted_lenders, :borrow_amount
+
+  def run_matcher sorted_lender_list, borrow_amount
+    @sorted_lenders = sorted_lender_list
+    @borrow_amount = borrow_amount
+    if enough_funds?
+      rate = calculate_rate
+      total_repayment = cal_total_repayment(rate)
     else
-      'Cannot caclulate you request as there are not enough funds to match your request at the present time'
+      'Cannot caclulate your request as there are not enough funds to match your request at the present time'
     end
   end
 
-  def enough_funds? sorted_lender_list, borrow_amount
-    (available_lender_amount(sorted_lender_list) >= borrow_amount) ? true : false
+  def enough_funds? 
+    (total_lenders_amount >= borrow_amount) ? true : false
   end
 
-  def available_lender_amount sorted_lender_list
-    lender_amount = sorted_lender_list.map {|x| x[:avaliable].to_i }
+  def total_lenders_amount 
+    lender_amount = sorted_lenders.map {|x| x[:available].to_i }
     lender_total = lender_amount.inject(:+)
   end
 
-  def calculate_rate sorted_lender_list, borrow_amount
-    true
+  def calculate_rate 
+    matched_amounts = matched_lenders
+    interest_rate = weighted_interest(matched_amounts)
   end
 
-  def matched_lenders sorted_lender_list, borrow_amount
+  def matched_lenders 
     remaining_amount = borrow_amount
     rates_used = []
-    sorted_lender_list.each do |row|
-      row[:lent_amount] = calc_lent_amount(row[:avaliable],remaining_borrower)
-      remaining_amount -= row[:avaliable]
+    sorted_lenders.each do |row|
+      row[:lent_amount] = calc_lent_amount(row[:available],remaining_amount)
+      remaining_amount -= row[:available]
       rates_used << row
     end
     rates_used
   end
 
-  def calc_lent_amount lender_amount, remaining_borrower
-    if remaining_borrower - lender_amount > 0
-      lender_amount
-    else
-      remaining_borrower
+  def calc_lent_amount lender_amount, remaining_amount
+    spread = remaining_amount - lender_amount
+    case 
+      when remaining_amount < 0
+        0
+      when spread > 0
+        lender_amount
+      else
+        remaining_amount
     end
   end
 
-end
+  def weighted_interest matched_amounts
+    interest = 0
+    total_lent = 0
+    matched_amounts.each do |row|
+      interest += row[:rate] * row[:lent_amount]
+      total_lent += row[:lent_amount]
+    end
+    weighted_interest_rate = interest / total_lent
+  end
 
-{lender: 'Bob', rate: 0.05, avaliable: 300}
-{lender: 'Jill', rate: 0.15, avaliable: 200}
+end
