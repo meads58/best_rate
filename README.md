@@ -10,3 +10,7 @@ This script will match the amount you want to borrow and return the best availab
 
 ##Running the tests
 * From within best_rate dir run ```rspec```
+
+##Improvements
+* Details about the borrow could be put into it's own class if the loan duration became dynamic or more rules where needed to valid a borrower.
+* Split the matcher class out into interest rate and repayment modules if there are more rules.
