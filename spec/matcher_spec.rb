@@ -17,7 +17,7 @@ describe Matcher do
       allow(match).to receive(:total_lenders_amount).and_return(500)
       expect(match.enough_funds?).to be true
 		end
-    it 'will return true if the borrow amount euqals the avaliable lenders total' do
+    it 'will return true if the borrow amount equals the available lenders total' do
       equal_borrower = 500
       match.borrow_amount = equal_borrower
       allow(match).to receive(:total_lenders_amount).and_return(500)
@@ -32,27 +32,27 @@ describe Matcher do
 	end
 
   context 'total_lenders_amount' do
-    it 'can find the total availiale amount for all lenders' do
+    it 'can find the total available amount for all lenders' do
       expect(match.total_lenders_amount).to eq 500
     end
   end
 
   context 'run_matcher' do
-    it 'will call caluclate_rate if there are enough avaliable funds to lend out' do
+    it 'will call caluclate_rate if there are enough available funds to lend out' do
       allow(match).to receive(:calc_total_repayment)
       allow(match).to receive(:calc_monthly_repayment)
       expect(match).to receive(:calculate_rate)
       match.run_matcher(@sorted_lender_list, @valid_borrower_amount)
     end
 
-    it 'will call calc_total_repayment if there are enough avaliable funds to lend out' do
+    it 'will call calc_total_repayment if there are enough available funds to lend out' do
       allow(match).to receive(:calculate_rate)
       allow(match).to receive(:calc_monthly_repayment)
       expect(match).to receive(:calc_total_repayment)
       match.run_matcher(@sorted_lender_list, @valid_borrower_amount)
     end
 
-    it 'will call calc_monthly_repayment if there are enough avaliable funds to lend out' do
+    it 'will call calc_monthly_repayment if there are enough available funds to lend out' do
       allow(match).to receive(:calculate_rate)
       allow(match).to receive(:calc_total_repayment)
       expect(match).to receive(:calc_monthly_repayment)
@@ -67,9 +67,9 @@ describe Matcher do
       expect(match.run_matcher('sorted_list', 100)).to include(:borrower_amount=>100,:weighted_rate=>0.05787, :total_repayment=>100.553, :monthly_repayment=>8.379442)
     end
 
-    it "returns the message 'Cannot caclulate your request as there are not enough funds to match your request at the present time' if the full borrower amount is not matched" do
+    it "returns the message 'Cannot calculate your request as there are not enough funds to match your request at the present time' if the full borrower amount is not matched" do
       allow(match).to receive(:enough_funds?).and_return(false)
-      expect(match.run_matcher(@sorted_lender_list, @invalid_borrower_amount)).to eq 'Cannot caclulate your request as there are not enough funds to match your request at the present time'
+      expect(match.run_matcher(@sorted_lender_list, @invalid_borrower_amount)).to include({not_enough_funds: "Cannot calculate your request. We do not have the available funds for your request, try again with a smaller amount"})
     end
   end
 
@@ -143,16 +143,15 @@ describe Matcher do
   end
 
   context 'principal_repayment' do
-    it 'can calculate the montly repayment to pay off the principal ONLY amount for the loan duration' do
+    it 'can calculate the monthly repayment to pay off the principal ONLY amount for the loan duration' do
       match.borrow_amount = 1000
       expect(match.principal_repayment).to eq 27.77777777777778
     end
   end
 
   context 'calc_monthly_repayment' do
-    it 'can calculate the monthtly repayment for principal AND interest for a Loan Duration of 36 months' do
-
+    it 'can calculate the total monthly repayment(principal AND interest) for the loan duration' do
+      expect(match.calc_monthly_repayment(1100)).to eq 30.555555555555557
     end
   end
-
 end

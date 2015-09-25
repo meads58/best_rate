@@ -12,7 +12,6 @@ class Main
     @matcher = Matcher.new
     @display = Display.new
     correct_args
-
   end
 
   def main
@@ -22,9 +21,9 @@ class Main
 
   def correct_args
     if ARGV.count != 2
-      failed_validation 'plase supply a market file and loan amount'
+      failed_validation 'please supply a market file and loan amount'
     elsif check_loan_amount == false
-      failed_validation 'Please supply and amount to borrow between £1000 and £15,000 and in £100 increments'
+      failed_validation 'Please supply an amount to borrow between £1000 and £15,000 and in £100 increments'
     else
       @borrower_amount = ARGV[1].to_i
       main
@@ -42,16 +41,8 @@ class Main
   end
 
   def failed_validation validation_message
-    puts validation_message
+    display.failed_msg(validation_message)
   end
-
-  # def match_validation
-  #   if @matcher.match?(lender_list, borrower_amount)
-  #     @match.calculate_match
-  #   else
-  #     failed_validation 'Our avaliable funds cannot match your borrower request at this time'
-  #   end
-  # end
 end
 
 if __FILE__ == $0

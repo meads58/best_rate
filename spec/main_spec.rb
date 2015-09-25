@@ -16,14 +16,14 @@ describe Main do
       expect_any_instance_of(Main).to receive(:correct_args)
       Main.new
     end
-    it "Will return the message 'plase supply a market file and loan amount' if the ARGV stream only has one argument" do
+    it "Will return the message 'please supply a market file and loan amount' if the ARGV stream only has one argument" do
       stub_const("ARGV", [MARKET_FILE])
-      expect(quote).to receive(:failed_validation).with('plase supply a market file and loan amount')
+      expect(quote).to receive(:failed_validation).with('please supply a market file and loan amount')
       quote.correct_args
     end
-    it "Will return the message 'plase supply a market file and loan amount' if the ARGV stream has three arguments" do
+    it "Will return the message 'please supply a market file and loan amount' if the ARGV stream has three arguments" do
       stub_const("ARGV", [MARKET_FILE, 1000, 'some extra value'])
-      expect(quote).to receive(:failed_validation).with('plase supply a market file and loan amount')
+      expect(quote).to receive(:failed_validation).with('please supply a market file and loan amount')
       quote.correct_args
     end
   end
@@ -58,6 +58,15 @@ describe Main do
     end
   end
 
+  context 'failed validation' do
+    it 'puts out the failed message' do
+      display = instance_double("Display", 'failed_msg')
+      expect(quote.display).to receive(:failed_msg)
+      quote.failed_validation 'failed message'
+    end
+  end
+
+#THis TEST IS FAILING DUE TO THE CONSTANT ARGV AND STDOUT
   xcontext 'get_sorted_lenders_array' do
     it 'Calls find_best_loan if the check_loan_amount loan amount returns true' do
       lender = instance_double("Lender", 'convert_csv_to_array')
@@ -66,12 +75,4 @@ describe Main do
       quote.get_sorted_lenders_array
     end
   end
-
-  xcontext 'failed validation' do
-    it 'puts out the failed message' do
-      expect(STDOUT).to receive(:puts).with('failed message')
-      quote.failed_validation 'failed message'
-    end
-  end
-
 end
