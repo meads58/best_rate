@@ -40,21 +40,31 @@ describe Matcher do
   context 'run_matcher' do
     it 'will call caluclate_rate if there are enough avaliable funds to lend out' do
       allow(match).to receive(:calc_total_repayment)
+      allow(match).to receive(:calc_monthly_repayment)
       expect(match).to receive(:calculate_rate)
       match.run_matcher(@sorted_lender_list, @valid_borrower_amount)
     end
 
     it 'will call calc_total_repayment if there are enough avaliable funds to lend out' do
       allow(match).to receive(:calculate_rate)
+      allow(match).to receive(:calc_monthly_repayment)
       expect(match).to receive(:calc_total_repayment)
+      match.run_matcher(@sorted_lender_list, @valid_borrower_amount)
+    end
+
+    it 'will call calc_monthly_repayment if there are enough avaliable funds to lend out' do
+      allow(match).to receive(:calculate_rate)
+      allow(match).to receive(:calc_total_repayment)
+      expect(match).to receive(:calc_monthly_repayment)
       match.run_matcher(@sorted_lender_list, @valid_borrower_amount)
     end
 
     it 'returns a hash with the total repayment amount, weighted interest rate and monthly repayments if there when there are sufficient funds' do
       allow(match).to receive(:enough_funds?).and_return(true)
-      allow(match).to receive(:calculate_rate)
-      allow(match).to receive(:calc_total_repayment).and_return(10.553)
-      expect(match.run_matcher('sorted_list', 100)).to eq 10.553
+      allow(match).to receive(:calculate_rate).and_return(0.05787)
+      allow(match).to receive(:calc_total_repayment).and_return(100.553)
+      allow(match).to receive(:calc_monthly_repayment).and_return(8.379442)
+      expect(match.run_matcher('sorted_list', 100)).to include(:borrower_amount=>100,:weighted_rate=>0.05787, :total_repayment=>100.553, :monthly_repayment=>8.379442)
     end
 
     it "returns the message 'Cannot caclulate your request as there are not enough funds to match your request at the present time' if the full borrower amount is not matched" do
@@ -107,20 +117,12 @@ describe Matcher do
   context 'calculate_rate' do
     it 'calls the matched_lenders method' do
       allow(match).to receive(:weighted_interest)
-      allow(match).to receive(:calc_total_repayment)
       expect(match).to receive(:matched_lenders)
       match.calculate_rate
     end
      it 'calls the weighted_interest method' do
       allow(match).to receive(:matched_lenders)
-      allow(match).to receive(:calc_total_repayment)
       expect(match).to receive(:weighted_interest)
-      match.calculate_rate
-    end
-     it 'calls the calc_total_repayment method' do
-      allow(match).to receive(:matched_lenders)
-      allow(match).to receive(:weighted_interest)
-      expect(match).to receive(:calc_total_repayment)
       match.calculate_rate
     end
   end
@@ -141,12 +143,16 @@ describe Matcher do
   end
 
   context 'principal_repayment' do
-    it 'can calculate the montly repayment to pay off the principal amount for the loan duration' do
+    it 'can calculate the montly repayment to pay off the principal ONLY amount for the loan duration' do
       match.borrow_amount = 1000
       expect(match.principal_repayment).to eq 27.77777777777778
     end
   end
 
+  context 'calc_monthly_repayment' do
+    it 'can calculate the monthtly repayment for principal AND interest for a Loan Duration of 36 months' do
 
+    end
+  end
 
 end
