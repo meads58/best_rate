@@ -1,21 +1,23 @@
 require_relative 'lenders'
 require_relative 'matcher'
+require_relative 'display'
 
 class Main
 
-  attr_accessor :matcher
+  attr_accessor :matcher, :display
 
   def initialize options = {}
     @borrower_amount = 0
     @lend = Lender.new
     @matcher = Matcher.new
+    @display = Display.new
     correct_args
 
   end
 
   def main
     sorted_lenders = get_sorted_lenders_array
-    puts matcher.run_matcher(sorted_lenders, @borrower_amount)
+    display.reporter(matcher.run_matcher(sorted_lenders, @borrower_amount))
   end
 
   def correct_args

@@ -8,13 +8,14 @@ class Matcher
     final_result = {}
     @sorted_lenders = sorted_lender_list
     @borrow_amount = borrow_amount
-    if enough_funds?
+    if enough_funds? == true
       final_result[:weighted_rate] = calculate_rate
       final_result[:total_repayment] = calc_total_repayment(final_result[:weighted_rate])
       final_result[:monthly_repayment] = calc_monthly_repayment(final_result[:total_repayment])
+      #final_result[:monthly_repayment] = calc_monthly_repayment(final_result[:total_repayment])
       final_result[:borrower_amount] = borrow_amount
     else
-      return 'Cannot caclulate your request as there are not enough funds to match your request at the present time'
+      final_result[:not_enough_funds] = 'Cannot caclulate your request as there are not enough funds to match your request at the present time'
     end
     final_result
   end
@@ -87,5 +88,6 @@ class Matcher
 
   def calc_monthly_repayment total_repayment
     monthlty_repayment = total_repayment / LOAN_DURATION
+    monthly_repayment.round(2)
   end
 end
