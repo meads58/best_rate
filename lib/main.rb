@@ -36,8 +36,8 @@ class Main
   end
 
   def get_sorted_lenders_array
-    @test_file = ARGV[0]
-    @lend.convert_csv_to_array @test_file
+    test_file = ARGV[0]
+    @lend.convert_csv_to_array test_file
   end
 
   def failed_validation validation_message
